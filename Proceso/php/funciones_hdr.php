@@ -260,6 +260,7 @@ if ($_POST['Paneles'] == 1) {
 
                   <!-- //-----END ASIGNACIONES------ -->
                 </li>
+                <span class="badge badge-outline-danger">Danger</span>
 
 
               </ul>
