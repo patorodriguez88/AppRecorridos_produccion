@@ -260,8 +260,13 @@ if ($_POST['Paneles'] == 1) {
 
                   <!-- //-----END ASIGNACIONES------ -->
                 </li>
-                <span class="badge badge-outline-danger">Danger</span>
-
+                <?php
+                $sql = $mysqli->query("SELECT CobrarEnvio FROM Ventas WHERE NumPedido='$row[CodigoSeguimiento]' AND Eliminado=0");
+                $datos = $sql->fetch_array(MYSQLI_ASSOC);
+                if ($datos['CobrarEnvio'] <> 0) {
+                  echo "<span class='badge badge-outline-warning'>Atencion! Requiere Cobranza</span>";
+                };
+                ?>
 
               </ul>
             </div> <!-- end col -->
