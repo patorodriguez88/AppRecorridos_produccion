@@ -284,6 +284,8 @@ if ($_POST['Paneles'] == 1) {
                   <!-- //-----END ASIGNACIONES------ -->
                 </li>
                 <?php
+                echo "Cobrar Envio?" . $row['CobrarEnvio'];
+
                 if ($row['CobrarEnvio'] == 1) {
 
                   echo '<span class="badge badge-danger">Danger</span>';
