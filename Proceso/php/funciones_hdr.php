@@ -19,7 +19,7 @@ if ($_POST['MisEnvios'] == 1) {
 if ($_POST['Paneles'] == 1) {
 
   if ($_POST['search'] == '') {
-    $BuscarRecorridos = $mysqli->query("SELECT if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)as Posicion,HojaDeRuta.Cliente,Seguimiento,HojaDeRuta.id as hdrid,TransClientes.*,
+    $BuscarRecorridos = $mysqli->query("SELECT TransClientes.CobrarEnnvio,if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)as Posicion,HojaDeRuta.Cliente,Seguimiento,HojaDeRuta.id as hdrid,TransClientes.*,
      IF(Retirado=0,RazonSocial,ClienteDestino)as NombreCliente, 
      IF(Retirado=0,TransClientes.ingBrutosOrigen,TransClientes.idClienteDestino)as idCliente,
      TransClientes.Cantidad 
@@ -27,7 +27,7 @@ if ($_POST['Paneles'] == 1) {
      INNER JOIN TransClientes ON TransClientes.id=HojaDeRuta.idTransClientes
      WHERE HojaDeRuta.Estado='Abierto' AND HojaDeRuta.Devuelto=0 AND HojaDeRuta.Recorrido='$_SESSION[RecorridoAsignado]'AND TransClientes.Eliminado='0' ORDER BY if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)");
   } else {
-    $BuscarRecorridos = $mysqli->query("SELECT if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)as Posicion,HojaDeRuta.Cliente,Seguimiento,HojaDeRuta.id as hdrid,TransClientes.*,
+    $BuscarRecorridos = $mysqli->query("SELECT TransClientes.CobrarEnnvio,if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)as Posicion,HojaDeRuta.Cliente,Seguimiento,HojaDeRuta.id as hdrid,TransClientes.*,
      IF(Retirado=0,RazonSocial,ClienteDestino)as NombreCliente,
      IF(Retirado=0,TransClientes.ingBrutosOrigen,TransClientes.idClienteDestino)as idCliente,
      TransClientes.Cantidad
@@ -250,21 +250,18 @@ if ($_POST['Paneles'] == 1) {
                           <? } ?>
                         </tbody>
                       </table>
-
-
                   <? }
                   } else {
                   }
                   ?>
-
-
                   <!-- //-----END ASIGNACIONES------ -->
                 </li>
                 <?php
-                $sql = $mysqli->query("SELECT CobrarEnvio FROM Ventas WHERE NumPedido='$row[CodigoSeguimiento]' AND Eliminado=0");
-                $datos = $sql->fetch_array(MYSQLI_ASSOC);
-                if ($datos['CobrarEnvio'] <> 0) {
-                  echo "<span class='badge badge-outline-warning'>Atencion! Requiere Cobranza</span>";
+                if ($row['CobrarEnvio'] == 1) {
+                  $sql = $mysqli->query("SELECT SUM(CobrarEnvio)AS Cobrar FROM Ventas WHERE NumPedido='$row[CodigoSeguimiento]' AND Eliminado=0");
+                  $datos = $sql->fetch_array(MYSQLI_ASSOC);
+
+                  echo "<span class='badge badge-outline-warning'>Atencion! Requiere Cobranza de $ " . number_format($datos['Cobrar'], 2) . "</span>";
                 };
                 ?>
 
