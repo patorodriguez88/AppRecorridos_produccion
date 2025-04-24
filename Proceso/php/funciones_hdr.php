@@ -288,8 +288,19 @@ if ($_POST['Paneles'] == 1) {
 
 
                 if ((int)$row['CobrarEnvio'] === 1) {
-                  $sql = $mysqli->query("SELECT SUM(CobrarEnvio) as Cobrar FROM Ventas WHERE NumPedido=' " . $row['Seguimiento'] . "' AND Eliminado=0");
-                  echo "<span class='badge badge-outline-danger'>Atención! Requiere Cobranza de $ " . number_format($sql->fetch_assoc()['Cobrar'], 2) . "</span>";
+                  $numPedido = $mysqli->real_escape_string($row['Seguimiento']);
+                  $sql = $mysqli->query("SELECT SUM(CobrarEnvio) AS Cobrar FROM Ventas WHERE NumPedido = '$numPedido' AND Eliminado = 0");
+
+                  if ($sql) {
+                    $rowCobranza = $sql->fetch_assoc();
+                    $monto = floatval($rowCobranza['Cobrar'] ?? 0);
+
+                    if ($monto > 0) {
+                      echo "<span class='badge badge-outline-danger'>¡Atención! Requiere Cobranza de $ " . number_format($monto, 2, ',', '.') . "</span>";
+                    }
+                  }
+                  // $sql = $mysqli->query("SELECT SUM(CobrarEnvio) as Cobrar FROM Ventas WHERE NumPedido=' " . $row['Seguimiento'] . "' AND Eliminado=0");
+                  // echo "<span class='badge badge-outline-danger'>Atención! Requiere Cobranza de $ " . number_format($sql->fetch_assoc()['Cobrar'], 2) . "</span>";
                 }
                 ?>
 
