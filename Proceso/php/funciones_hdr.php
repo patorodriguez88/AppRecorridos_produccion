@@ -171,17 +171,6 @@ if ($_POST['Paneles'] == 1) {
     <div class="col-xl-7">
       <div class="card">
         <div class="card-body border border-<? echo $color; ?>">
-          <!--                   <div class="dropdown float-end">
-                      <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false">
-                          <i class="mdi mdi-dots-vertical"></i>
-                      </a>
-                      <div class="dropdown-menu dropdown-menu-end">
-                          <a href="javascript:void(0);" class="dropdown-item">Weekly Report</a>
-                          <a href="javascript:void(0);" class="dropdown-item">Monthly Report</a>
-                          <a href="javascript:void(0);" class="dropdown-item">Action</a>
-                          <a href="javascript:void(0);" class="dropdown-item">Settings</a>
-                      </div>
-                  </div> -->
 
           <h2 class="header-title mb-1 text-<? echo $color; ?>"><? echo $row['Posicion']; ?> <i class="mdi mdi-arrow-<? echo $icon; ?>"> </i><? echo $Servicio; ?> | <? echo $row['NombreCliente']; ?></h2>
           <small class="mb-2"><b><?
@@ -322,10 +311,7 @@ if ($_POST['Paneles'] == 1) {
     </div><!-- end col-->
 <?
   }
-  // Liberar resultados
-  /*************  ✨ Windsurf Command 🌟  *************/
-  $sqlasignaciones->free();
-  // mysql_free_result();
-  /*******  c6ffe171-8db6-4b8b-a70a-c9c6b847e752  *******/
+  // $sqlasignaciones->free();
+  mysql_free_result();
 }
 ?>
