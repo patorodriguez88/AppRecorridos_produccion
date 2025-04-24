@@ -285,7 +285,8 @@ if ($_POST['Paneles'] == 1) {
                 </li>
                 <?php
                 if ($row['CobrarEnvio'] == 1) {
-                  echo "<span class='badge badge-danger'>¡Atención! Requiere Cobranza de \$ " . number_format($row['CobrarEnvio'], 2) . "</span>";
+
+                  echo '<span class="badge badge-danger">Danger</span>';
                 }
                 ?>
 
