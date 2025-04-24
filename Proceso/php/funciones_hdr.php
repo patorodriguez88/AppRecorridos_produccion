@@ -2,8 +2,6 @@
 session_start();
 require_once "../../Conexion/conexioni.php";
 
-
-
 if ($_POST['MisEnvios'] == 1) {
   $Usuario = $_SESSION['idusuario'];
   $sql = $mysqli->query("SELECT COUNT(id)AS Total FROM TransClientes WHERE Entregado=1 AND Eliminado=0 AND Devuelto=0 AND idABM='$Usuario' AND YEAR(FechaEntrega) =YEAR(CURRENT_DATE()) and MONTH(FechaEntrega)=MONTH(CURRENT_DATE())");

@@ -162,7 +162,7 @@ function paneles(a) {
   $.ajax({
     data: { Paneles: 1, search: a },
     type: "POST",
-    url: "Proceso/php/funciones_hdr1.php",
+    url: "Proceso/php/funciones_hdr.php",
     beforeSend: function () {
       $("#info-alert-modal-header").html("Cargando datos..");
       $("#info-alert-modal").modal("show");
