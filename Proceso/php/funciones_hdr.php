@@ -293,7 +293,7 @@ if ($_POST['Paneles'] == 1) {
                     $monto = $rowCobranza['Cobrar'];
 
                     if ($monto > 0) {
-                      echo "<span class='badge badge-outline-danger fw-bold fs-3'>¡Atención! Requiere Cobranza de $ " . number_format($monto, 2, ',', '.') . "</span>";
+                      echo "<span class='badge badge-outline-danger fw-bold fs-7'>¡Atención! Requiere Cobranza de $ " . number_format($monto, 2, ',', '.') . "</span>";
                     }
                   }
                 }
