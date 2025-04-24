@@ -284,13 +284,13 @@ if ($_POST['Paneles'] == 1) {
                   <!-- //-----END ASIGNACIONES------ -->
                 </li>
                 <?php
-                if ((int)$row['CobrarEnvio'] === 1)
+                if ($row['CobrarEnvio'] == 1) {
                   $numPedido = $row['Seguimiento'];
                   $sql = $mysqli->query("SELECT SUM(CobrarEnvio) AS Cobrar FROM Ventas WHERE NumPedido = '$numPedido' AND Eliminado = 0");
 
                   if ($sql) {
                     $rowCobranza = $sql->fetch_array();
-                    $monto = floatval($rowCobranza['Cobrar'] ?? 0);
+                    $monto = $rowCobranza['Cobrar'];
 
                     if ($monto > 0) {
                       echo "<span class='badge badge-outline-danger fw-bold fs-5'>¡Atención! Requiere Cobranza de $ " . number_format($monto, 2, ',', '.') . "</span>";
