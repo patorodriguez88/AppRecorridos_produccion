@@ -134,7 +134,7 @@ if ($_POST['Paneles'] == 1) {
                                 </li>
 
                                 <li>
-                                    <p class="text-muted mb-1 font-13"><i class="mdi mdi-card-search-outline"></i> SEGUIMIENTO</p>
+                                    <p class="text-muted mb-1 font-13"><i class="mdi mdi-card-search-outline"></i> SEGUIMIENTOs</p>
                                     <h5><?= $codSeguimiento ?></h5>
                                 </li>
 
