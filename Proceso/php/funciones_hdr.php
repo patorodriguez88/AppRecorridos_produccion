@@ -284,7 +284,7 @@ if ($_POST['Paneles'] == 1) {
                   <!-- //-----END ASIGNACIONES------ -->
                 </li>
                 <?php
-                if (!empty($row['CobrarEnvio'])) {
+                if ($row['CobrarEnvio'] == 1) {
                   $codigoSeguimiento = $mysqli->real_escape_string($row['CodigoSeguimiento']);
                   $sql = $mysqli->query("SELECT SUM(CobrarEnvio) AS Cobrar FROM Ventas WHERE NumPedido = '$codigoSeguimiento' AND Eliminado = 0");
 
