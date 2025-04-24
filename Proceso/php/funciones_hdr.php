@@ -293,11 +293,9 @@ if ($_POST['Paneles'] == 1) {
                     $monto = $rowCobranza['Cobrar'];
 
                     if ($monto > 0) {
-                      echo "<span class='badge badge-outline-danger fw-bold fs-4'>¡Atención! Requiere Cobranza de $ " . number_format($monto, 2, ',', '.') . "</span>";
+                      echo "<span class='badge badge-outline-danger fw-bold fs-3'>¡Atención! Requiere Cobranza de $ " . number_format($monto, 2, ',', '.') . "</span>";
                     }
                   }
-                  // $sql = $mysqli->query("SELECT SUM(CobrarEnvio) as Cobrar FROM Ventas WHERE NumPedido=' " . $row['Seguimiento'] . "' AND Eliminado=0");
-                  // echo "<span class='badge badge-outline-danger'>Atención! Requiere Cobranza de $ " . number_format($sql->fetch_assoc()['Cobrar'], 2) . "</span>";
                 }
                 ?>
 
