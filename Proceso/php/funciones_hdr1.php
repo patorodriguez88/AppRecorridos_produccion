@@ -45,8 +45,10 @@ if (isset($_POST['MisEnvios'])) {
 }
 
 if ($_POST['Paneles'] == 1) {
-    $recorrido = $_SESSION['RecorridoAsignado'];
-    $usuario = $_SESSION['NombreUsuario'];
+    // $recorrido = $_SESSION['RecorridoAsignado'];
+    // $usuario = $_SESSION['NombreUsuario'];
+    $recorrido = $_SESSION['RecorridoAsignado'] ?? '';
+    $usuario = $_SESSION['NombreUsuario'] ?? 'Repartidor';
     $fechaHoy = date('Y-m-d');
 
     // Pre-cargar asignaciones
@@ -64,7 +66,9 @@ if ($_POST['Paneles'] == 1) {
     }
 
     // Consulta principal optimizada con JOINs
-    $filtro = ($_POST['search'] != '') ? "AND HojaDeRuta.Cliente LIKE '%" . $mysqli->real_escape_string($_POST['search']) . "%'" : "";
+    // $filtro = ($_POST['search'] != '') ? "AND HojaDeRuta.Cliente LIKE '%" . $mysqli->real_escape_string($_POST['search']) . "%'" : "";
+    $busqueda = isset($_POST['search']) ? $mysqli->real_escape_string($_POST['search']) : '';
+    $filtro = ($busqueda != '') ? "AND HojaDeRuta.Cliente LIKE '%$busqueda%'" : '';
 
     $query = "SELECT TransClientes.*, HojaDeRuta.id as hdrid, HojaDeRuta.Cliente, HojaDeRuta.Posicion, HojaDeRuta.Posicion_retiro,
                    HojaDeRuta.Estado, HojaDeRuta.Devuelto, Clientes.idProveedor, Clientes.nombrecliente,
@@ -92,7 +96,8 @@ if ($_POST['Paneles'] == 1) {
         $veocel = ($contacto != '') ? 1 : 0;
 
         $idProv = $row['idProveedor'];
-        $relacion = $row['IngBrutosOrigen'];
+        // $relacion = $row['IngBrutosOrigen'];
+        $relacion = $row['IngBrutosOrigen'] ?? '';
         $codSeguimiento = $row['CodigoSeguimiento'];
 
         $listaAsignaciones = $asignaciones[$idProv][$relacion] ?? [];
@@ -153,7 +158,9 @@ if ($_POST['Paneles'] == 1) {
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($listaAsignaciones as $asig):
-                                                    $prod = $asigProductos[$asig['CodigoProducto']][$relacion] ?? [];
+                                                    // $prod = $asigProductos[$asig['CodigoProducto']][$relacion] ?? [];
+                                                    $codigo = $asig['CodigoProducto'] ?? '';
+                                                    $prod = $asigProductos[$codigo][$relacion] ?? [];
                                                 ?>
                                                     <tr>
                                                         <td><?= $prod['Nombre'] ?? 'Sin nombre' ?></td>
