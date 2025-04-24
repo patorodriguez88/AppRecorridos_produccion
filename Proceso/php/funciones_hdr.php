@@ -2,19 +2,58 @@
 session_start();
 require_once "../../Conexion/conexioni.php";
 
-if ($_POST['MisEnvios'] == 1) {
+if (isset($_POST['MisEnvios'])) {
   $Usuario = $_SESSION['idusuario'];
-  $sql = $mysqli->query("SELECT COUNT(id)AS Total FROM TransClientes WHERE Entregado=1 AND Eliminado=0 AND Devuelto=0 AND idABM='$Usuario' AND YEAR(FechaEntrega) =YEAR(CURRENT_DATE()) and MONTH(FechaEntrega)=MONTH(CURRENT_DATE())");
+  $inicioMes = date('Y-m-01');
+  $finMes = date('Y-m-t');
 
+  // ENVIOS ENTREGADOS
+  $sql = $mysqli->query("
+    SELECT COUNT(id) AS Total 
+    FROM TransClientes 
+    WHERE Entregado = 1 
+      AND Eliminado = 0 
+      AND Devuelto = 0 
+      AND idABM = '$Usuario' 
+      AND FechaEntrega BETWEEN '$inicioMes' AND '$finMes'
+  ");
   $MisEnvios = $sql->fetch_array(MYSQLI_ASSOC);
   $TotalMisEnvios = $MisEnvios['Total'];
-  //ENVIOS NO ENTREGADOS
-  $sql = $mysqli->query("SELECT COUNT(id)AS Total FROM TransClientes WHERE Entregado=0 AND Eliminado=0 AND Devuelto=0 AND idABM='$Usuario' AND YEAR(FechaEntrega) =YEAR(CURRENT_DATE()) and MONTH(FechaEntrega)=MONTH(CURRENT_DATE())");
+
+  // ENVIOS NO ENTREGADOS
+  $sql = $mysqli->query("
+    SELECT COUNT(id) AS Total 
+    FROM TransClientes 
+    WHERE Entregado = 0 
+      AND Eliminado = 0 
+      AND Devuelto = 0 
+      AND idABM = '$Usuario' 
+      AND FechaEntrega BETWEEN '$inicioMes' AND '$finMes'
+  ");
   $MisNoEnvios = $sql->fetch_array(MYSQLI_ASSOC);
   $TotalMisNoEnvios = $MisNoEnvios['Total'];
 
-  echo json_encode(array('success' => 1, 'Total' => $TotalMisEnvios, 'Totalno' => $TotalMisNoEnvios, 'Usuario' => $Usuario));
+  echo json_encode([
+    'success' => 1,
+    'Total' => $TotalMisEnvios,
+    'Totalno' => $TotalMisNoEnvios,
+    'Usuario' => $Usuario
+  ]);
 }
+
+// if ($_POST['MisEnvios'] == 1) {
+//   $Usuario = $_SESSION['idusuario'];
+//   $sql = $mysqli->query("SELECT COUNT(id)AS Total FROM TransClientes WHERE Entregado=1 AND Eliminado=0 AND Devuelto=0 AND idABM='$Usuario' AND YEAR(FechaEntrega) =YEAR(CURRENT_DATE()) and MONTH(FechaEntrega)=MONTH(CURRENT_DATE())");
+
+//   $MisEnvios = $sql->fetch_array(MYSQLI_ASSOC);
+//   $TotalMisEnvios = $MisEnvios['Total'];
+//   //ENVIOS NO ENTREGADOS
+//   $sql = $mysqli->query("SELECT COUNT(id)AS Total FROM TransClientes WHERE Entregado=0 AND Eliminado=0 AND Devuelto=0 AND idABM='$Usuario' AND YEAR(FechaEntrega) =YEAR(CURRENT_DATE()) and MONTH(FechaEntrega)=MONTH(CURRENT_DATE())");
+//   $MisNoEnvios = $sql->fetch_array(MYSQLI_ASSOC);
+//   $TotalMisNoEnvios = $MisNoEnvios['Total'];
+
+//   echo json_encode(array('success' => 1, 'Total' => $TotalMisEnvios, 'Totalno' => $TotalMisNoEnvios, 'Usuario' => $Usuario));
+// }
 
 if ($_POST['Paneles'] == 1) {
 
