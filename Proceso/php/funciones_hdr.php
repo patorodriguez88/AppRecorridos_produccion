@@ -285,7 +285,8 @@ if ($_POST['Paneles'] == 1) {
                 </li>
                 <?php
 
-                echo '<span class="badge badge-danger">Danger</span>';
+                echo "<span class='badge badge-outline-danger'>Danger</span>";
+
                 if ((int)$row['CobrarEnvio'] === 1) {
                   echo '<span class="badge badge-danger">Danger</span>';
                 }
