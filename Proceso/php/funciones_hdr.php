@@ -284,10 +284,7 @@ if ($_POST['Paneles'] == 1) {
                   <!-- //-----END ASIGNACIONES------ -->
                 </li>
                 <?php
-
-
-
-                if ((int)$row['CobrarEnvio'] === 1) {
+                if ((int)$row['CobrarEnvio'] === 1)
                   $numPedido = $row['Seguimiento'];
                   $sql = $mysqli->query("SELECT SUM(CobrarEnvio) AS Cobrar FROM Ventas WHERE NumPedido = '$numPedido' AND Eliminado = 0");
 
