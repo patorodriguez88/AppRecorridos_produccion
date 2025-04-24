@@ -288,7 +288,7 @@ if ($_POST['Paneles'] == 1) {
 
 
                 if ((int)$row['CobrarEnvio'] === 1) {
-                  $sql = $mysqli->query("SELECT SUM(CobrarEnvio) as Cobrar FROM Ventas WHERE NumPedido='$codSeguimiento' AND Eliminado=0");
+                  $sql = $mysqli->query("SELECT SUM(CobrarEnvio) as Cobrar FROM Ventas WHERE NumPedido=' " . $row['Seguimiento'] . "' AND Eliminado=0");
                   echo "<span class='badge badge-outline-danger'>Atención! Requiere Cobranza de $ " . number_format($sql->fetch_assoc()['Cobrar'], 2) . "</span>";
                 }
                 ?>
