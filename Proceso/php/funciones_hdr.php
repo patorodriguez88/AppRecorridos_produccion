@@ -1,64 +1,27 @@
-<?
+<?php
 session_start();
 require_once "../../Conexion/conexioni.php";
 
-if (isset($_POST['MisEnvios'])) {
-  $Usuario = $_SESSION['idusuario'];
-  $inicioMes = date('Y-m-01');
-  $finMes = date('Y-m-t');
 
-  // ENVIOS ENTREGADOS
-  $sql = $mysqli->query("
-    SELECT COUNT(id) AS Total 
-    FROM TransClientes 
-    WHERE Entregado = 1 
-      AND Eliminado = 0 
-      AND Devuelto = 0 
-      AND idABM = '$Usuario' 
-      AND FechaEntrega BETWEEN '$inicioMes' AND '$finMes'
-  ");
+
+if ($_POST['MisEnvios'] == 1) {
+  $Usuario = $_SESSION['idusuario'];
+  $sql = $mysqli->query("SELECT COUNT(id)AS Total FROM TransClientes WHERE Entregado=1 AND Eliminado=0 AND Devuelto=0 AND idABM='$Usuario' AND YEAR(FechaEntrega) =YEAR(CURRENT_DATE()) and MONTH(FechaEntrega)=MONTH(CURRENT_DATE())");
+
   $MisEnvios = $sql->fetch_array(MYSQLI_ASSOC);
   $TotalMisEnvios = $MisEnvios['Total'];
-
-  // ENVIOS NO ENTREGADOS
-  $sql = $mysqli->query("
-    SELECT COUNT(id) AS Total 
-    FROM TransClientes 
-    WHERE Entregado = 0 
-      AND Eliminado = 0 
-      AND Devuelto = 0 
-      AND idABM = '$Usuario' 
-      AND FechaEntrega BETWEEN '$inicioMes' AND '$finMes'
-  ");
+  //ENVIOS NO ENTREGADOS
+  $sql = $mysqli->query("SELECT COUNT(id)AS Total FROM TransClientes WHERE Entregado=0 AND Eliminado=0 AND Devuelto=0 AND idABM='$Usuario' AND YEAR(FechaEntrega) =YEAR(CURRENT_DATE()) and MONTH(FechaEntrega)=MONTH(CURRENT_DATE())");
   $MisNoEnvios = $sql->fetch_array(MYSQLI_ASSOC);
   $TotalMisNoEnvios = $MisNoEnvios['Total'];
 
-  echo json_encode([
-    'success' => 1,
-    'Total' => $TotalMisEnvios,
-    'Totalno' => $TotalMisNoEnvios,
-    'Usuario' => $Usuario
-  ]);
+  echo json_encode(array('success' => 1, 'Total' => $TotalMisEnvios, 'Totalno' => $TotalMisNoEnvios, 'Usuario' => $Usuario));
 }
-
-// if ($_POST['MisEnvios'] == 1) {
-//   $Usuario = $_SESSION['idusuario'];
-//   $sql = $mysqli->query("SELECT COUNT(id)AS Total FROM TransClientes WHERE Entregado=1 AND Eliminado=0 AND Devuelto=0 AND idABM='$Usuario' AND YEAR(FechaEntrega) =YEAR(CURRENT_DATE()) and MONTH(FechaEntrega)=MONTH(CURRENT_DATE())");
-
-//   $MisEnvios = $sql->fetch_array(MYSQLI_ASSOC);
-//   $TotalMisEnvios = $MisEnvios['Total'];
-//   //ENVIOS NO ENTREGADOS
-//   $sql = $mysqli->query("SELECT COUNT(id)AS Total FROM TransClientes WHERE Entregado=0 AND Eliminado=0 AND Devuelto=0 AND idABM='$Usuario' AND YEAR(FechaEntrega) =YEAR(CURRENT_DATE()) and MONTH(FechaEntrega)=MONTH(CURRENT_DATE())");
-//   $MisNoEnvios = $sql->fetch_array(MYSQLI_ASSOC);
-//   $TotalMisNoEnvios = $MisNoEnvios['Total'];
-
-//   echo json_encode(array('success' => 1, 'Total' => $TotalMisEnvios, 'Totalno' => $TotalMisNoEnvios, 'Usuario' => $Usuario));
-// }
 
 if ($_POST['Paneles'] == 1) {
 
   if ($_POST['search'] == '') {
-    $BuscarRecorridos = $mysqli->query("SELECT TransClientes.CobrarEnnvio,if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)as Posicion,HojaDeRuta.Cliente,Seguimiento,HojaDeRuta.id as hdrid,TransClientes.*,
+    $BuscarRecorridos = $mysqli->query("SELECT TransClientes.CobrarEnvio,if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)as Posicion,HojaDeRuta.Cliente,Seguimiento,HojaDeRuta.id as hdrid,TransClientes.*,
      IF(Retirado=0,RazonSocial,ClienteDestino)as NombreCliente, 
      IF(Retirado=0,TransClientes.ingBrutosOrigen,TransClientes.idClienteDestino)as idCliente,
      TransClientes.Cantidad 
@@ -66,7 +29,7 @@ if ($_POST['Paneles'] == 1) {
      INNER JOIN TransClientes ON TransClientes.id=HojaDeRuta.idTransClientes
      WHERE HojaDeRuta.Estado='Abierto' AND HojaDeRuta.Devuelto=0 AND HojaDeRuta.Recorrido='$_SESSION[RecorridoAsignado]'AND TransClientes.Eliminado='0' ORDER BY if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)");
   } else {
-    $BuscarRecorridos = $mysqli->query("SELECT TransClientes.CobrarEnnvio,if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)as Posicion,HojaDeRuta.Cliente,Seguimiento,HojaDeRuta.id as hdrid,TransClientes.*,
+    $BuscarRecorridos = $mysqli->query("SELECT TransClientes.CobrarEnvio,if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)as Posicion,HojaDeRuta.Cliente,Seguimiento,HojaDeRuta.id as hdrid,TransClientes.*,
      IF(Retirado=0,RazonSocial,ClienteDestino)as NombreCliente,
      IF(Retirado=0,TransClientes.ingBrutosOrigen,TransClientes.idClienteDestino)as idCliente,
      TransClientes.Cantidad
@@ -285,12 +248,12 @@ if ($_POST['Paneles'] == 1) {
                   <!-- //-----END ASIGNACIONES------ -->
                 </li>
                 <?php
-                if ($row['CobrarEnvio'] == 1) {
-                  $sql = $mysqli->query("SELECT SUM(CobrarEnvio)AS Cobrar FROM Ventas WHERE NumPedido='$row[CodigoSeguimiento]' AND Eliminado=0");
-                  $datos = $sql->fetch_array(MYSQLI_ASSOC);
+                // if ($row['CobrarEnvio'] == 1) {
+                //   $sql = $mysqli->query("SELECT SUM(CobrarEnvio)AS Cobrar FROM Ventas WHERE NumPedido='$row[CodigoSeguimiento]' AND Eliminado=0");
+                //   $datos = $sql->fetch_array(MYSQLI_ASSOC);
 
-                  echo "<span class='badge badge-outline-warning'>Atencion! Requiere Cobranza de $ " . number_format($datos['Cobrar'], 2) . "</span>";
-                };
+                //   echo "<span class='badge badge-outline-warning'>Atencion! Requiere Cobranza de $ " . number_format($datos['Cobrar'], 2) . "</span>";
+                // };
                 ?>
 
               </ul>
