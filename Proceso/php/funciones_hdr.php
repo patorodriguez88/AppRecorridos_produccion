@@ -246,12 +246,12 @@ if ($_POST['Paneles'] == 1) {
                   <!-- //-----END ASIGNACIONES------ -->
                 </li>
                 <?php
-                // if ($row['CobrarEnvio'] == 1) {
-                //   $sql = $mysqli->query("SELECT SUM(CobrarEnvio)AS Cobrar FROM Ventas WHERE NumPedido='$row[CodigoSeguimiento]' AND Eliminado=0");
-                //   $datos = $sql->fetch_array(MYSQLI_ASSOC);
+                if ($row['CobrarEnvio'] == 1) {
+                  $sql = $mysqli->query("SELECT SUM(CobrarEnvio)AS Cobrar FROM Ventas WHERE NumPedido='$row[CodigoSeguimiento]' AND Eliminado=0");
+                  $datos = $sql->fetch_array(MYSQLI_ASSOC);
 
-                //   echo "<span class='badge badge-outline-warning'>Atencion! Requiere Cobranza de $ " . number_format($datos['Cobrar'], 2) . "</span>";
-                // };
+                  echo "<span class='badge badge-outline-warning'>Atencion! Requiere Cobranza de $ " . number_format($datos['Cobrar'], 2) . "</span>";
+                };
                 ?>
 
               </ul>
