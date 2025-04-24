@@ -285,20 +285,7 @@ if ($_POST['Paneles'] == 1) {
                 </li>
                 <?php
                 if ($row['CobrarEnvio'] == 1) {
-                  $codigoSeguimiento = $mysqli->real_escape_string($row['CodigoSeguimiento']);
-                  $sql = $mysqli->query("SELECT SUM(CobrarEnvio) AS Cobrar FROM Ventas WHERE NumPedido = '$codigoSeguimiento' AND Eliminado = 0");
-
-                  if ($sql) {
-                    $datos = $sql->fetch_array(MYSQLI_ASSOC);
-                    $monto = isset($datos['Cobrar']) ? floatval($datos['Cobrar']) : 0;
-
-                    if ($monto > 0) {
-                      $montoFormateado = number_format($monto, 2, ',', '.'); // Formato AR
-                      echo "<span class='badge badge-danger text-white'>¡Atención! Requiere Cobranza de \$ $montoFormateado</span>";
-                    }
-                  } else {
-                    error_log("Error al consultar cobranza para NumPedido '$codigoSeguimiento': " . $mysqli->error);
-                  }
+                  echo "<span class='badge badge-danger'>¡Atención! Requiere Cobranza de \$ " . number_format($row['CobrarEnvio'], 2) . "</span>";
                 }
                 ?>
 
