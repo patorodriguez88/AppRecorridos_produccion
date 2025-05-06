@@ -186,6 +186,7 @@ $(".guardarNoEntrega").click(function () {
       url: "https://www.caddy.com.ar/AppRecorridos/Proceso/php/funciones.php",
       success: function (response) {
         var jsonData = JSON.parse(response);
+        $("#receptor-observaciones").val("");
         $("#card-envio").css("display", "none");
         $("#info-alert-modal-header").html("Cargando entrega..");
         webhooks(jsonData.estado);
