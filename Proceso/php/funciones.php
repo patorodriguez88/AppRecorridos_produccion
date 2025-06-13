@@ -1,4 +1,4 @@
-<?
+<?php
 session_start();
 require_once "../../Conexion/conexioni.php";
 date_default_timezone_set('America/Argentina/Buenos_Aires');
@@ -15,11 +15,11 @@ $infoABM = $Usuario . ' ' . $Fecha . ' ' . $Hora;
 
 
 if ($_POST['Datos'] == 1) {
-  if ($_SESSION[idusuario]) {
+  if ($_SESSION['idusuario']) {
     $sql = $mysqli->query("SELECT NumerodeOrden FROM Logistica WHERE idUsuarioChofer='$_SESSION[idusuario]' AND Estado='Cargada' AND Eliminado='0'");
     $row = $sql->fetch_array(MYSQLI_ASSOC);
 
-    if ($row[NumerodeOrden]) {
+    if ($row['NumerodeOrden']) {
       //CANTIDADES
       $sqlCantidadTotal = $mysqli->query("SELECT COUNT(id)as Cantidad FROM HojaDeRuta WHERE Recorrido='$_SESSION[RecorridoAsignado]' 
     AND Eliminado=0 AND NumerodeOrden='$row[NumerodeOrden]' AND Devuelto='0'");
@@ -111,6 +111,14 @@ FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento'");
     } else {
       $Entregado = 0;
       $Estado = 'En Transito';
+      $Fecha = date("Y-m-d");
+      $Hora = date("H:i");
+      $sqlTransClientes = $mysqli->query("SELECT id,RazonSocial,DomicilioOrigen,Recorrido FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento' AND Eliminado=0 ");
+      $datossqlTransClientes = $sqlTransClientes->fetch_array(MYSQLI_ASSOC);
+      $NombreCompleto = utf8_decode($datossqlTransClientes['RazonSocial']);
+      $Localizacion = utf8_decode($datossqlTransClientes['DomicilioOrigen']);
+      $idTransClientes = $datossqlTransClientes['id'];
+      $Recorrido = $datossqlTransClientes['Recorrido'];
     }
 
     $sqlTransClientes = $mysqli->query("SELECT id,ClienteDestino,DomicilioDestino,Recorrido FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento' AND Eliminado=0");
@@ -133,7 +141,7 @@ FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento'");
 
 
 
-  $mysqli->query("INSERT IGNORE INTO Seguimiento(Fecha,Hora,Usuario,Sucursal,CodigoSeguimiento,Observaciones,Entregado,Estado,NombreCompleto,Dni,Destino,Visitas,Retirado,idTransClientes,Recorrido)
+  $mysqli->query("INSERT INTO Seguimiento(Fecha,Hora,Usuario,Sucursal,CodigoSeguimiento,Observaciones,Entregado,Estado,NombreCompleto,Dni,Destino,Visitas,Retirado,idTransClientes,Recorrido)
   VALUES('{$Fecha}','{$Hora}','{$Usuario}','{$Sucursal}','{$CodigoSeguimiento}','{$Observaciones}','{$Entregado}','{$Estado}','{$nombre2}','{$dni}','{$Localizacion}','{$Visita}',
   '{$Retirado}','{$idTransClientes}','{$Recorrido}')");
 
