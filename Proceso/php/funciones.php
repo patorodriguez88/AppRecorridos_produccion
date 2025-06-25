@@ -40,18 +40,18 @@ if ($_POST['Datos'] == 1) {
 
       echo json_encode(array(
         'success' => 1,
-        'data' => $row[NumerodeOrden],
-        'Recorrido' => $_SESSION[RecorridoAsignado],
-        'Total' => $TotalCantidad[Cantidad],
-        'Cerrados' => $TotalNoEntregados[Cantidad],
-        'Abiertos' => $TotalEntregados[Cantidad],
+        'data' => $row['NumerodeOrden'],
+        'Recorrido' => $_SESSION['RecorridoAsignado'],
+        'Total' => $TotalCantidad['Cantidad'],
+        'Cerrados' => $TotalNoEntregados['Cantidad'],
+        'Abiertos' => $TotalEntregados['Cantidad'],
         'Usuario' => $Transportista
       ));
     } else {
-      echo json_encode(array('success' => 2, 'usuario' => $_SESSION['idusuario'], 'norden' => $row[NumerodeOrden]));
+      echo json_encode(array('success' => 2, 'usuario' => $_SESSION['idusuario'], 'norden' => $row['NumerodeOrden']));
     }
   } else {
-    echo json_encode(array('success' => 0, 'usuario' => $_SESSION[idusuario]));
+    echo json_encode(array('success' => 0, 'usuario' => $_SESSION['idusuario']));
   }
 }
 
@@ -101,6 +101,7 @@ FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento'");
     if ($sqlLocalizacionR['Redespacho'] == 0) {
       $Entregado = 1;
       $Estado = 'Entregado al Cliente';
+      $Estado_id = 7;
       //CONTROLO PARA EVITAR DUPLICIDAD DE ESTADO ENTREGADO
       $resultado = $mysqli->query("SELECT 1 FROM Seguimiento WHERE CodigoSeguimiento = '$CodigoSeguimiento' AND Entregado = $Entregado AND Estado='$Estado' LIMIT 1");
 
@@ -111,6 +112,7 @@ FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento'");
     } else {
       $Entregado = 0;
       $Estado = 'En Transito';
+      $Estado_id = 5;
       $Fecha = date("Y-m-d");
       $Hora = date("H:i");
       $sqlTransClientes = $mysqli->query("SELECT id,RazonSocial,DomicilioOrigen,Recorrido FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento' AND Eliminado=0 ");
@@ -131,6 +133,7 @@ FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento'");
 
     $Entregado = 0;
     $Estado = 'Retirado del Cliente';
+    $Estado_id = 3;
     $sqlTransClientes = $mysqli->query("SELECT id,RazonSocial,DomicilioOrigen,Recorrido FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento' AND Eliminado=0 ");
     $datossqlTransClientes = $sqlTransClientes->fetch_array(MYSQLI_ASSOC);
     $NombreCompleto = utf8_decode($datossqlTransClientes['RazonSocial']);
@@ -141,9 +144,9 @@ FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento'");
 
 
 
-  $mysqli->query("INSERT INTO Seguimiento(Fecha,Hora,Usuario,Sucursal,CodigoSeguimiento,Observaciones,Entregado,Estado,NombreCompleto,Dni,Destino,Visitas,Retirado,idTransClientes,Recorrido)
+  $mysqli->query("INSERT INTO Seguimiento(Fecha,Hora,Usuario,Sucursal,CodigoSeguimiento,Observaciones,Entregado,Estado,NombreCompleto,Dni,Destino,Visitas,Retirado,idTransClientes,Recorrido,Estado_id)
   VALUES('{$Fecha}','{$Hora}','{$Usuario}','{$Sucursal}','{$CodigoSeguimiento}','{$Observaciones}','{$Entregado}','{$Estado}','{$nombre2}','{$dni}','{$Localizacion}','{$Visita}',
-  '{$Retirado}','{$idTransClientes}','{$Recorrido}')");
+  '{$Retirado}','{$idTransClientes}','{$Recorrido}','{$Estado_id}')");
 
   if (($_POST['Retirado'] == 1) || ($Entregado == 1)) {
 
@@ -187,6 +190,7 @@ if ($_POST['ConfirmoNoEntrega'] == 1) {
   $Observaciones = $_POST['Razones'] . ' ' . $_POST['Obs'];
   $Retirado = $_POST['Retirado'];
   $Estado = 'No se pudo entregar';
+  $Estado_id = 8;
 
   $sqlLocalizacion = $mysqli->query("SELECT ClienteDestino,DomicilioDestino,LocalidadDestino,Redespacho,IngBrutosOrigen 
 FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento'");
@@ -229,9 +233,9 @@ FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento'");
     // $Recorrido=$datossqlTransClientes[Recorrido];  
   }
 
-  $mysqli->query("INSERT IGNORE INTO Seguimiento(Fecha,Hora,Usuario,Sucursal,CodigoSeguimiento,Observaciones,Entregado,Estado,NombreCompleto,Dni,Destino,Visitas,Retirado,idTransClientes,Recorrido)
+  $mysqli->query("INSERT IGNORE INTO Seguimiento(Fecha,Hora,Usuario,Sucursal,CodigoSeguimiento,Observaciones,Entregado,Estado,NombreCompleto,Dni,Destino,Visitas,Retirado,idTransClientes,Recorrido,Estado_id)
   VALUES('{$Fecha}','{$Hora}','{$Usuario}','{$Sucursal}','{$CodigoSeguimiento}','{$Observaciones}','{$Entregado}','{$Estado}','{$nombre2}','{$dni}','{$Localizacion}','{$Visita}',
-  '{$Retirado}','{$idTransClientes}','{$Recorrido}')");
+  '{$Retirado}','{$idTransClientes}','{$Recorrido}','{$Estado_id}')");
 
   //CIERRO EN HOJA DE RUTA
   if ($CodigoSeguimiento <> "") {
@@ -243,7 +247,7 @@ FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento'");
   NumerodeOrden='$NumeroOrden',Recorrido='$Recorrido',Estado='$Estado',idABM='$idUsuario',infoABM='$infoABM',FechaEntrega='$Fecha' 
   WHERE CodigoSeguimiento='$CodigoSeguimiento' LIMIT 1");
   }
-  echo json_encode(array('success' => 1, 'id' => $id[id], 'estado' => $Estado));
+  echo json_encode(array('success' => 1, 'id' => $id['id'], 'estado' => $Estado));
 
   // $verifico=$mysqli->query("SELECT id FROM Seguimiento WHERE CodigoSeguimiento='$CodigoSeguimiento' AND Entregado=1");
 
