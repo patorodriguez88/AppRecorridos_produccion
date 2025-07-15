@@ -142,11 +142,9 @@ FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento'");
     $Recorrido = $datossqlTransClientes['Recorrido'];
   }
 
-
-
-  $mysqli->query("INSERT INTO Seguimiento(Fecha,Hora,Usuario,Sucursal,CodigoSeguimiento,Observaciones,Entregado,Estado,NombreCompleto,Dni,Destino,Visitas,Retirado,idTransClientes,Recorrido,Estado_id)
+  $mysqli->query("INSERT INTO Seguimiento(Fecha,Hora,Usuario,Sucursal,CodigoSeguimiento,Observaciones,Entregado,Estado,NombreCompleto,Dni,Destino,Visitas,Retirado,idTransClientes,Recorrido,Estado_id,NumerodeOrden)
   VALUES('{$Fecha}','{$Hora}','{$Usuario}','{$Sucursal}','{$CodigoSeguimiento}','{$Observaciones}','{$Entregado}','{$Estado}','{$nombre2}','{$dni}','{$Localizacion}','{$Visita}',
-  '{$Retirado}','{$idTransClientes}','{$Recorrido}','{$Estado_id}')");
+  '{$Retirado}','{$idTransClientes}','{$Recorrido}','{$Estado_id}','{$NumeroOrden}')");
 
   if (($_POST['Retirado'] == 1) || ($Entregado == 1)) {
 
@@ -233,9 +231,9 @@ FROM TransClientes WHERE CodigoSeguimiento='$CodigoSeguimiento'");
     // $Recorrido=$datossqlTransClientes[Recorrido];  
   }
 
-  $mysqli->query("INSERT IGNORE INTO Seguimiento(Fecha,Hora,Usuario,Sucursal,CodigoSeguimiento,Observaciones,Entregado,Estado,NombreCompleto,Dni,Destino,Visitas,Retirado,idTransClientes,Recorrido,Estado_id)
+  $mysqli->query("INSERT IGNORE INTO Seguimiento(Fecha,Hora,Usuario,Sucursal,CodigoSeguimiento,Observaciones,Entregado,Estado,NombreCompleto,Dni,Destino,Visitas,Retirado,idTransClientes,Recorrido,Estado_id,NumerodeOrden)
   VALUES('{$Fecha}','{$Hora}','{$Usuario}','{$Sucursal}','{$CodigoSeguimiento}','{$Observaciones}','{$Entregado}','{$Estado}','{$nombre2}','{$dni}','{$Localizacion}','{$Visita}',
-  '{$Retirado}','{$idTransClientes}','{$Recorrido}','{$Estado_id}')");
+  '{$Retirado}','{$idTransClientes}','{$Recorrido}','{$Estado_id}','{$NumeroOrden}')");
 
   //CIERRO EN HOJA DE RUTA
   if ($CodigoSeguimiento <> "") {
