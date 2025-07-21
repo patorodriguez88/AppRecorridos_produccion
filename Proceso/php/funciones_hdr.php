@@ -63,7 +63,7 @@ if ($_POST['Paneles'] == 1) {
      TransClientes.Cantidad 
      FROM HojaDeRuta 
      INNER JOIN TransClientes ON TransClientes.id=HojaDeRuta.idTransClientes
-     WHERE HojaDeRuta.Estado='Abierto' AND HojaDeRuta.Devuelto=0 AND HojaDeRuta.Recorrido='$_SESSION[RecorridoAsignado]'AND TransClientes.Eliminado='0' ORDER BY if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)");
+     WHERE HojaDeRuta.Estado='Abierto' AND HojaDeRuta.Devuelto=0 AND HojaDeRuta.Recorrido='$_SESSION[RecorridoAsignado]'AND TransClientes.Eliminado='0' AND HojaDeRuta.Eliminado=0 ORDER BY if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)");
   } else {
     $BuscarRecorridos = $mysqli->query("SELECT TransClientes.CobrarEnvio,if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)as Posicion,HojaDeRuta.Cliente,Seguimiento,HojaDeRuta.id as hdrid,TransClientes.*,
      IF(Retirado=0,RazonSocial,ClienteDestino)as NombreCliente,
@@ -73,7 +73,7 @@ if ($_POST['Paneles'] == 1) {
      INNER JOIN TransClientes ON TransClientes.id=HojaDeRuta.idTransClientes
      WHERE HojaDeRuta.Estado='Abierto' AND HojaDeRuta.Devuelto=0 
      AND HojaDeRuta.Recorrido='$_SESSION[RecorridoAsignado]' 
-     AND TransClientes.Eliminado='0' AND HojaDeRuta.Cliente LIKE '%$_POST[search]%' 
+     AND TransClientes.Eliminado='0' AND HojaDeRuta.Eliminado=0 AND HojaDeRuta.Cliente LIKE '%$_POST[search]%' 
      ORDER BY  if(TransClientes.Retirado=1,HojaDeRuta.Posicion,HojaDeRuta.Posicion_retiro)");
   }
 
