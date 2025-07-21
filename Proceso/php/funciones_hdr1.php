@@ -77,7 +77,7 @@ if ($_POST['Paneles'] == 1) {
             FROM HojaDeRuta
             INNER JOIN TransClientes ON TransClientes.id = HojaDeRuta.idTransClientes
             LEFT JOIN Clientes ON Clientes.id = IF(TransClientes.Retirado=0, TransClientes.ingBrutosOrigen, TransClientes.idClienteDestino)
-            WHERE HojaDeRuta.Estado='Abierto' AND HojaDeRuta.Devuelto=0 AND TransClientes.Eliminado='0'
+            WHERE HojaDeRuta.Estado='Abierto' AND HojaDeRuta.Devuelto=0 AND TransClientes.Eliminado=0 AND HojaDeRuta.Eliminado=0
               AND HojaDeRuta.Recorrido='$recorrido' $filtro
             ORDER BY IF(TransClientes.Retirado=1, HojaDeRuta.Posicion, HojaDeRuta.Posicion_retiro)";
 
