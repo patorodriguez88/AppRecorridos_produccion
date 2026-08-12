@@ -1,7 +1,7 @@
 <?
 $host="localhost";
 $user="dinter6_prodrig";
-$pass="pato@4986";
+$pass="uG=!xb%=k5y{o3~z";
 $db="dinter6_triangular";
 
 $mysqli = new mysqli($host,$user,$pass,$db);
